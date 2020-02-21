@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200220225836) do
+ActiveRecord::Schema.define(version: 20200221162932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,14 +21,35 @@ ActiveRecord::Schema.define(version: 20200220225836) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "dish_ingredients", force: :cascade do |t|
+    t.bigint "ingredient_id"
+    t.bigint "dish_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dish_id"], name: "index_dish_ingredients_on_dish_id"
+    t.index ["ingredient_id"], name: "index_dish_ingredients_on_ingredient_id"
+  end
+
   create_table "dishes", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.bigint "chef_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "ingredient_id"
     t.index ["chef_id"], name: "index_dishes_on_chef_id"
+    t.index ["ingredient_id"], name: "index_dishes_on_ingredient_id"
   end
 
+  create_table "ingredients", force: :cascade do |t|
+    t.string "name"
+    t.string "calories"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "dish_ingredients", "dishes"
+  add_foreign_key "dish_ingredients", "ingredients"
   add_foreign_key "dishes", "chefs"
+  add_foreign_key "dishes", "ingredients"
 end
